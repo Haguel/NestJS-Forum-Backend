@@ -39,3 +39,4 @@ tsconfig.build.json
 package-lock.json
 nest-cli.json
 .development.env
+.production.env
