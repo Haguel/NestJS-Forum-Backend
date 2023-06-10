@@ -5,6 +5,7 @@ import { Role } from "src/roles/models/roles.model";
 import { UserRole } from "src/roles/models/user-roles.model";
 
 interface UserCreationArggs {
+    email: string;
     username: string;
     password: string;
 }
@@ -13,6 +14,9 @@ interface UserCreationArggs {
 export class User extends Model<User, UserCreationArggs> {
     @Column({ type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, unique: true })
     id: number;
+
+    @Column({ type: DataTypes.STRING, unique: true, allowNull: false })
+    email: string;
 
     @Column({ type: DataTypes.STRING, allowNull: false })
     username: string;
