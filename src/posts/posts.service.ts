@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { UsersService } from 'src/users/users.service';
 import { Post } from './models/posts.model';
 import { EditPostDto } from './dto/edit-post.dto';
+import { Complaint } from 'src/complaints/models/complaints.model';
 
 @Injectable()
 export class PostsService {
@@ -34,7 +35,10 @@ export class PostsService {
 
     async getPost(id: number) {
         try {
-            const post = await this.postRepository.findByPk(id);
+            const post = await this.postRepository.findOne({
+                where: { id },
+                include: [Complaint],
+            });
 
             if (!post) {
                 throw new HttpException(`Post with id ${id} hasn't been found`, HttpStatus.NOT_FOUND);
@@ -77,5 +81,4 @@ export class PostsService {
             console.log(err);
         }
     }
-
 }
