@@ -34,5 +34,5 @@ export class User extends Model<User, UserCreationArggs> {
     roles: Role[];
 
     @HasMany(() => Post)
-    post: Post[];
+    posts: Post[];
 }
