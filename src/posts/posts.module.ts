@@ -11,6 +11,7 @@ import { Post } from './models/posts.model';
     SequelizeModule.forFeature([Post])
   ],
   providers: [PostsService],
-  controllers: [PostsController]
+  controllers: [PostsController],
+  exports: [PostsService]
 })
 export class PostsModule { }

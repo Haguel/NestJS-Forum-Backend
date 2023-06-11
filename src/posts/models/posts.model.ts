@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 import { BelongsTo, Column, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
-import { Complaint } from "./complaints.model";
+import { Complaint } from "../../complaints/models/complaints.model";
 import { User } from "src/users/models/users.model";
 
 interface PostCreationArggs {

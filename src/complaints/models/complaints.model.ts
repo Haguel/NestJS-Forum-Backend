@@ -1,9 +1,10 @@
 import { BelongsTo, Column, ForeignKey, Model, Table } from 'sequelize-typescript';
 import { DataTypes } from 'sequelize';
-import { Post } from './posts.model';
+import { Post } from '../../posts/models/posts.model';
 
 interface ComplaintCreationArggs {
     complaintText: string;
+    postId: number;
 }
 
 @Table({ tableName: 'complaints' })
