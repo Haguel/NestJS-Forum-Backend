@@ -4,10 +4,10 @@ import { Post } from "src/posts/models/posts.model";
 import { Role } from "src/roles/models/roles.model";
 import { UserRole } from "src/roles/models/user-roles.model";
 
-interface UserCreationArggs {
+export interface UserCreationArggs {
     email: string;
     username: string;
-    password: string;
+    passwordHash: string;
 }
 
 @Table({ tableName: 'users' })
@@ -22,7 +22,7 @@ export class User extends Model<User, UserCreationArggs> {
     username: string;
 
     @Column({ type: DataTypes.STRING, allowNull: false })
-    password: string;
+    passwordHash: string;
 
     @Column({ type: DataTypes.BOOLEAN, defaultValue: false })
     isBanned: boolean;

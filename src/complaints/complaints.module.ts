@@ -4,9 +4,11 @@ import { ComplaintsService } from './complaints.service';
 import { PostsModule } from 'src/posts/posts.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Complaint } from './models/complaints.model';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
+    JwtModule,
     PostsModule,
     SequelizeModule.forFeature([Complaint])
   ],
