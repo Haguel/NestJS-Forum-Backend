@@ -21,6 +21,6 @@ import { Complaint } from 'src/complaints/models/complaints.model';
     SequelizeModule.forFeature([User, UserRole, Role, Post, Complaint]),
   ],
   controllers: [AuthController],
-  providers: [AuthService]
+  providers: [AuthService],
 })
 export class AuthModule { }

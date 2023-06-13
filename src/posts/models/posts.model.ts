@@ -4,6 +4,7 @@ import { Complaint } from "../../complaints/models/complaints.model";
 import { User } from "src/users/models/users.model";
 
 interface PostCreationArggs {
+    userId: number;
     title: string;
     description: string;
 }
@@ -20,7 +21,7 @@ export class Post extends Model<Post, PostCreationArggs> {
     description: string;
 
     @ForeignKey(() => User)
-    @Column
+    @Column({ allowNull: false })
     userId: number;
 
     @BelongsTo(() => User)

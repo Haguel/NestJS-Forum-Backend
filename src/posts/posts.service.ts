@@ -14,23 +14,17 @@ export class PostsService {
     ) { }
 
 
-    async createPost(createPostDto: CreatePostDto) {
+    async createPost(userId: number, createPostDto: CreatePostDto) {
         try {
-            const user = await this.usersService.getUser(createPostDto.userId);
+            const user = await this.usersService.getUser(userId); // userId from the auth guard - there is no need to check it
+            const post = await this.postRepository.create({ ...createPostDto, userId });
 
-            if (!user) {
-                throw new HttpException(`User with id ${createPostDto.userId} hasn't been found`, HttpStatus.NOT_FOUND);
-            }
-
-            const post = await this.postRepository.create(createPostDto);
             user.posts.push(post);
 
             return post;
         } catch (err) {
             console.log(err);
         }
-
-
     }
 
     async getPost(id: number) {
@@ -50,16 +44,17 @@ export class PostsService {
         }
     }
 
-    async editPost(id: number, editPostDto: EditPostDto) {
+    async editPost(userId: number, postId: number, editPostDto: EditPostDto) {
         try {
-            await this.getPost(id); // error if no post
+            await this.getPost(postId);
 
-            const [, updatedPost] = await this.postRepository.update(
+            const [, [updatedPost]] = await this.postRepository.update(
                 {
                     ...editPostDto,
+                    userId,
                 },
                 {
-                    where: { id },
+                    where: { id: postId },
                     returning: true,
                 },
             )
@@ -72,7 +67,7 @@ export class PostsService {
 
     async removePost(id: number) {
         try {
-            await this.getPost(id); // error if no post
+            await this.getPost(id);
 
             await this.postRepository.destroy({ where: { id } });
 
