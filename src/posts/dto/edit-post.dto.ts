@@ -1,4 +1,3 @@
-export interface EditPostDto {
-    title: string;
-    description: string;
-}
+import { CreatePostDto } from "./create-post.dto";
+
+export class EditPostDto extends CreatePostDto { }
