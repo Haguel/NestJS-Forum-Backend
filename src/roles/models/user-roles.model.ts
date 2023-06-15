@@ -3,7 +3,7 @@ import { DataTypes } from 'sequelize';
 import { Role } from './roles.model';
 import { User } from 'src/users/models/users.model';
 
-@Table({ tableName: 'user-roles' })
+@Table({ tableName: 'user-roles', timestamps: false })
 export class UserRole extends Model<UserRole> {
     @Column({ type: DataTypes.INTEGER, unique: true, primaryKey: true, autoIncrement: true })
     id: number;

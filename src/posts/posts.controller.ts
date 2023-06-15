@@ -3,6 +3,7 @@ import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { EditPostDto } from './dto/edit-post.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { JwtPayload } from 'src/common/jwt';
 
 @Controller('posts')
 export class PostsController {
@@ -11,7 +12,9 @@ export class PostsController {
     @UseGuards(AuthGuard)
     @Post()
     createPost(@Req() request, @Body() createPostDto: CreatePostDto) {
-        return this.postsService.createPost(request.userId, createPostDto);
+        const user: JwtPayload = request.user as JwtPayload;
+
+        return this.postsService.createPost(user.userId, createPostDto);
     }
 
     @Get(':id')

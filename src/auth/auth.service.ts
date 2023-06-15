@@ -5,13 +5,17 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/sequelize';
 import { User, UserCreationArggs } from 'src/users/models/users.model';
 import { LoginUserDto } from './dto/login-user.dto';
-import { JwtPayload } from 'src/common/interfaces';
+import { JwtPayload, convertUserToJwtPayload } from 'src/common/jwt';
+import { RolesService } from 'src/roles/roles.service';
+import { Role } from 'src/roles/models/roles.model';
+import { convertStringToRole } from 'src/roles/types/roles.types';
 
 @Injectable()
 export class AuthService {
     constructor(
+        private readonly rolesService: RolesService,
         private readonly jwtService: JwtService,
-        @InjectModel(User) private userRepository: typeof User
+        @InjectModel(User) private userRepository: typeof User,
     ) { }
 
     async login(loginUserDto: LoginUserDto) {
@@ -28,13 +32,9 @@ export class AuthService {
                 throw new HttpException('Wrong email or password', HttpStatus.FORBIDDEN);
             }
 
-            const jwtPayload: JwtPayload = {
-                userId: user.id,
-                userEmail: user.email,
-                userPassword: user.passwordHash,
-            };
-
+            const jwtPayload: JwtPayload = convertUserToJwtPayload(user);
             const token: string = this.jwtService.sign(jwtPayload);
+
             return token;
         } catch (err) {
             console.log(err);
@@ -47,16 +47,14 @@ export class AuthService {
             const hash: string = await bcrypt.hash(createUserDto.password, saltRounds);
 
             const createUserData: UserCreationArggs = { ...createUserDto, passwordHash: hash }
+            const user: User = await this.userRepository.create(createUserData);
 
-            const user = await this.userRepository.create(createUserData);
+            const role: Role = await this.rolesService.getRole(convertStringToRole('user'));
+            user.$add('role', role);
 
-            const jwtPayload: JwtPayload = {
-                userId: user.id,
-                userEmail: user.email,
-                userPassword: user.passwordHash,
-            };
-
+            const jwtPayload: JwtPayload = convertUserToJwtPayload(user);
             const token: string = this.jwtService.sign(jwtPayload);
+
             return token;
         } catch (err) {
             console.log(err);
