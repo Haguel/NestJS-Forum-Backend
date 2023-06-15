@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { PostsController } from './posts.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -9,7 +9,7 @@ import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
     JwtModule,
-    UsersModule,
+    forwardRef(() => UsersModule),
     SequelizeModule.forFeature([Post])
   ],
   providers: [PostsService],
