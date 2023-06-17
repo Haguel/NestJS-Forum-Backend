@@ -20,3 +20,10 @@ export const convertStringToRole = (value: string): roleType => {
 }
 
 const isRoleType = (value: string): value is roleType => roles.includes(value);
+
+// Roles that can't be removed from user
+const immortalRoles: roleType[] = [
+    convertStringToRole("user")
+]
+
+export const canRoleBeRemoved = (role: roleType): boolean => !immortalRoles.includes(role); 

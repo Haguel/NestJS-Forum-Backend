@@ -4,9 +4,11 @@ import { RolesController } from './roles.controller';
 import { UsersModule } from 'src/users/users.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Role } from './models/roles.model';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
+    JwtModule,
     UsersModule,
     SequelizeModule.forFeature([Role]),
   ],

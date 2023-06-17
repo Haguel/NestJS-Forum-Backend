@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import { BelongsToMany, Column, Model, Table } from "sequelize-typescript";
 import { User } from "src/users/models/users.model";
 import { UserRole } from "./user-roles.model";
-import { roleType } from "../types/roles.types";
+import { roleType } from "../common/roles.common";
 
 @Table({ tableName: 'roles', timestamps: false })
 export class Role extends Model<Role> {
