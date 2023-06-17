@@ -3,7 +3,7 @@ import { UsersService } from './users.service';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/roles/guards/roles.guard';
 import { RolesDecorator } from 'src/roles/decorators/roles.decorator';
-import { convertStringToRole } from '../roles/common/roles.common';
+import { convertStringToRoleTitle } from '../roles/common/roles.common';
 import { BanUserDto } from './dto/ban-user.dto';
 
 @Controller('users')
@@ -15,7 +15,7 @@ export class UsersController {
         return this.usersService.getUser(id);
     }
 
-    @RolesDecorator(convertStringToRole('admin'))
+    @RolesDecorator(convertStringToRoleTitle('admin'))
     @UseGuards(AuthGuard, RolesGuard)
     @Post('ban/:id')
     banUser(
@@ -24,7 +24,7 @@ export class UsersController {
         return this.usersService.banUser(id, banUserDto);
     }
 
-    @RolesDecorator(convertStringToRole('admin'))
+    @RolesDecorator(convertStringToRoleTitle('admin'))
     @UseGuards(AuthGuard, RolesGuard)
     @Post('unban/:id')
     unbanUser(@Param('id', ParseIntPipe) id: number) {

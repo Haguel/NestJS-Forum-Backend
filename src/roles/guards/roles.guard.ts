@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtPayload } from 'src/common/jwt';
 import { UsersService } from '../../users/users.service';
 import { User } from 'src/users/models/users.model';
-import { convertStringToRole, roleType } from '../common/roles.common';
+import { convertStringToRoleTitle, roleTitle } from '../common/roles.common';
 import { Role } from '../models/roles.model';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class RolesGuard implements CanActivate {
     async canActivate(context: ExecutionContext): Promise<boolean> {
         try {
             const request = context.switchToHttp().getRequest();
-            const requiredRoles: roleType[] = this.reflector.get<roleType[]>('roles', context.getHandler());
+            const requiredRoles: roleTitle[] = this.reflector.get<roleTitle[]>('roleTitles', context.getHandler());
 
             if (!requiredRoles) {
                 throw new HttpException('There is no roles provided to the guard', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -33,14 +33,14 @@ export class RolesGuard implements CanActivate {
     }
 }
 
-const areAllRolesIncluded = (userRoles: Role[], requiredRoles: roleType[]): boolean => {
-    const convertedUserRoles: roleType[] = [];
+const areAllRolesIncluded = (userRoles: Role[], requiredRoles: roleTitle[]): boolean => {
+    const convertedRolesToTitles: roleTitle[] = [];
 
     userRoles.forEach((role: Role) => {
-        const convertedRole: roleType = convertStringToRole(role.title);
+        const convertedRole: roleTitle = convertStringToRoleTitle(role.title);
 
-        convertedUserRoles.push(convertedRole);
+        convertedRolesToTitles.push(convertedRole);
     });
 
-    return requiredRoles.every((role: roleType) => convertedUserRoles.includes(role));
+    return requiredRoles.every((roleTitle: roleTitle) => convertedRolesToTitles.includes(roleTitle));
 }
