@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, UseGuards, ParseIntPipe, Post } from '@nestjs/common';
 import { RolesService } from './roles.service';
-import { convertStringToRole, roleType } from './common/roles.common';
+import { convertStringToRoleTitle, roleTitle } from './common/roles.common';
 import { GetRoleDto } from './dto/get-role.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from './guards/roles.guard';
@@ -16,30 +16,30 @@ export class RolesController {
 
     @Get()
     getRole(@Body() getRoleDto: GetRoleDto) {
-        const roleTitle: roleType = convertStringToRole(getRoleDto.roleTitle);
+        const roleTitle: roleTitle = convertStringToRoleTitle(getRoleDto.roleTitle);
 
         return this.rolesService.getRole(roleTitle);
     }
 
-    @RolesDecorator(convertStringToRole('admin'))
+    @RolesDecorator(convertStringToRoleTitle('admin'))
     @UseGuards(AuthGuard, RolesGuard)
     @Post('add/:id')
     addRoleToUser(
         @Param('id', ParseIntPipe) userId: number,
         @Body() addRoleToUserDto: AddRoleToUserDto
     ) {
-        const role: roleType = convertStringToRole(addRoleToUserDto.role);
-        return this.rolesService.addRoleToUser(userId, role);
+        const roleTitle: roleTitle = convertStringToRoleTitle(addRoleToUserDto.role);
+        return this.rolesService.addRoleToUser(userId, roleTitle);
     }
 
-    @RolesDecorator(convertStringToRole('admin'))
+    @RolesDecorator(convertStringToRoleTitle('admin'))
     @UseGuards(AuthGuard, RolesGuard)
     @Post('remove/:id')
     removeRoleFromUser(
         @Param('id', ParseIntPipe) userId: number,
         @Body() removeRoleFromUserDto: RemoveRoleFromUserDto
     ) {
-        const role: roleType = convertStringToRole(removeRoleFromUserDto.role);
-        return this.rolesService.removeRoleFromUser(userId, role);
+        const roleTitle: roleTitle = convertStringToRoleTitle(removeRoleFromUserDto.role);
+        return this.rolesService.removeRoleFromUser(userId, roleTitle);
     }
 }

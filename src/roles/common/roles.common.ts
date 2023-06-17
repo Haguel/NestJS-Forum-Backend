@@ -1,17 +1,17 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-const roles: string[] = ["user", "admin", "moderator"];
+const roleTitles: string[] = ["user", "admin", "moderator"];
 
-export type roleType = (typeof roles)[number];
+export type roleTitle = (typeof roleTitles)[number];
 
 // I highly recommend to use this function everywhere where you must provide roleType value
 // in order to catch possible errors
-export const convertStringToRole = (value: string): roleType => {
+export const convertStringToRoleTitle = (value: string): roleTitle => {
     try {
         if (!isRoleType(value)) {
             throw new HttpException(`Invalid value provided: ${value}`, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return value as roleType;
+        return value as roleTitle;
     } catch (err) {
         console.log(err);
 
@@ -19,11 +19,11 @@ export const convertStringToRole = (value: string): roleType => {
     }
 }
 
-const isRoleType = (value: string): value is roleType => roles.includes(value);
+const isRoleType = (value: string): value is roleTitle => roleTitles.includes(value);
 
 // Roles that can't be removed from user
-const immortalRoles: roleType[] = [
-    convertStringToRole("user")
+const immortalRoles: roleTitle[] = [
+    convertStringToRoleTitle("user")
 ]
 
-export const canRoleBeRemoved = (role: roleType): boolean => !immortalRoles.includes(role); 
+export const canRoleBeRemoved = (role: roleTitle): boolean => !immortalRoles.includes(role); 

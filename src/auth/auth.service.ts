@@ -8,7 +8,7 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { JwtPayload, convertUserToJwtPayload } from 'src/common/jwt';
 import { RolesService } from 'src/roles/roles.service';
 import { Role } from 'src/roles/models/roles.model';
-import { convertStringToRole } from 'src/roles/common/roles.common';
+import { convertStringToRoleTitle } from 'src/roles/common/roles.common';
 
 @Injectable()
 export class AuthService {
@@ -49,7 +49,7 @@ export class AuthService {
             const createUserData: UserCreationArggs = { ...createUserDto, passwordHash: hash }
             const user: User = await this.userRepository.create(createUserData);
 
-            const role: Role = await this.rolesService.getRole(convertStringToRole('user'));
+            const role: Role = await this.rolesService.getRole(convertStringToRoleTitle('user'));
             user.$add('role', role);
 
             const jwtPayload: JwtPayload = convertUserToJwtPayload(user);

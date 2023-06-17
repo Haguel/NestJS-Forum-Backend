@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import { BelongsToMany, Column, Model, Table } from "sequelize-typescript";
 import { User } from "src/users/models/users.model";
 import { UserRole } from "./user-roles.model";
-import { roleType } from "../common/roles.common";
+import { roleTitle } from "../common/roles.common";
 
 @Table({ tableName: 'roles', timestamps: false })
 export class Role extends Model<Role> {
@@ -10,7 +10,7 @@ export class Role extends Model<Role> {
     id: number;
 
     @Column({ type: DataTypes.STRING, defaultValue: 'user' })
-    title: roleType;
+    title: roleTitle;
 
     @BelongsToMany(() => User, () => UserRole)
     users: User[]
