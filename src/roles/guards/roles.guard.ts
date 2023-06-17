@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtPayload } from 'src/common/jwt';
 import { UsersService } from '../../users/users.service';
 import { User } from 'src/users/models/users.model';
-import { convertStringToRole, roleType } from '../types/roles.types';
+import { convertStringToRole, roleType } from '../common/roles.common';
 import { Role } from '../models/roles.model';
 
 @Injectable()
@@ -41,8 +41,6 @@ const areAllRolesIncluded = (userRoles: Role[], requiredRoles: roleType[]): bool
 
         convertedUserRoles.push(convertedRole);
     });
-
-    console.log(convertedUserRoles);
 
     return requiredRoles.every((role: roleType) => convertedUserRoles.includes(role));
 }

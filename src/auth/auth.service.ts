@@ -8,7 +8,7 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { JwtPayload, convertUserToJwtPayload } from 'src/common/jwt';
 import { RolesService } from 'src/roles/roles.service';
 import { Role } from 'src/roles/models/roles.model';
-import { convertStringToRole } from 'src/roles/types/roles.types';
+import { convertStringToRole } from 'src/roles/common/roles.common';
 
 @Injectable()
 export class AuthService {
