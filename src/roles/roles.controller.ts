@@ -8,8 +8,8 @@ import { RolesDecorator } from './decorators/roles.decorator';
 import { AddRoleToUserDto } from './dto/add-role-to-user.dto';
 import { RemoveRoleFromUserDto } from './dto/remove-role.from-user.dto';
 
-// New roles can only be added by own in database
-// then they must be added to roles.types.ts file
+// New type of roles can only be added by own in database
+// then they must be added to roles.common.ts file in roleTitles array
 @Controller('roles')
 export class RolesController {
     constructor(private rolesService: RolesService) { }

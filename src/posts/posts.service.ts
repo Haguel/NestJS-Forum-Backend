@@ -5,6 +5,7 @@ import { UsersService } from 'src/users/users.service';
 import { Post } from './models/posts.model';
 import { EditPostDto } from './dto/edit-post.dto';
 import { Complaint } from 'src/complaints/models/complaints.model';
+import { User } from 'src/users/models/users.model';
 
 @Injectable()
 export class PostsService {
@@ -31,7 +32,7 @@ export class PostsService {
         try {
             const post = await this.postRepository.findOne({
                 where: { id },
-                include: [Complaint],
+                include: [Complaint, User],
             });
 
             if (!post) {

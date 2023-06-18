@@ -1,9 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { User } from './models/users.model';
+import { User, UserCreationArggs } from './models/users.model';
 import { Post } from 'src/posts/models/posts.model';
 import { Role } from 'src/roles/models/roles.model';
-import { BanUserDto } from './dto/ban-user.dto';
+import { RegisterUserDto } from 'src/auth/dto/register-user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -24,28 +25,29 @@ export class UsersService {
         } catch (err) {
             console.log(err);
         }
-
     }
 
-    async banUser(id: number, banUserDto: BanUserDto) {
-        const user: User = await this.getUser(id);
+    async findUserByEmail(email: string) {
+        try {
+            const user = await this.userRepository.findOne({ where: { email } })
 
-        user.isBanned = true;
-        user.banReason = banUserDto.banReason;
+            if (!user) {
+                throw new HttpException('There is no users with such email', HttpStatus.NOT_FOUND);
+            }
 
-        await user.save();
-
-        return HttpStatus.OK;
+            return user;
+        } catch (err) {
+            console.log(err);
+        }
     }
 
-    async unbanUser(id: number) {
-        const user: User = await this.getUser(id);
+    async createUser(registerUserDto: RegisterUserDto) {
+        const saltRounds: number = Number(process.env.SALT_ROUNDS);
+        const hash: string = await bcrypt.hash(registerUserDto.password, saltRounds);
 
-        user.isBanned = false;
-        user.banReason = null;
+        const createUserData: UserCreationArggs = { ...registerUserDto, passwordHash: hash }
+        const user: User = await this.userRepository.create(createUserData);
 
-        await user.save();
-
-        return HttpStatus.OK;
+        return user;
     }
 }

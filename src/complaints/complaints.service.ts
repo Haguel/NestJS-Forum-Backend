@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Complaint } from './models/complaints.model';
 import { PostsService } from '../posts/posts.service';
 import { CreateComplaintDto } from './dto/create-complaint.dto';
+import { Post } from 'src/posts/models/posts.model';
 
 @Injectable()
 export class ComplaintsService {
@@ -13,9 +14,9 @@ export class ComplaintsService {
 
     async createComplaint(createComplaintDto: CreateComplaintDto) {
         try {
-            const post = await this.postsService.getPost(createComplaintDto.postId);
+            const post: Post = await this.postsService.getPost(createComplaintDto.postId);
 
-            const complaint = await this.complaintRepository.create(createComplaintDto);
+            const complaint: Complaint = await this.complaintRepository.create(createComplaintDto);
 
             post.complaints.push(complaint);
 
@@ -41,14 +42,18 @@ export class ComplaintsService {
 
     async removeComplaint(id: number) {
         try {
-            await this.getComplaint(id);
+            const complaint: Complaint = await this.getComplaint(id);
 
-            await this.complaintRepository.destroy({ where: { id } });
-
-            return HttpStatus.OK;
+            await this.removeComplaintWithModel(complaint);
         } catch (err) {
             console.log(err);
         }
+    }
+
+    async removeComplaintWithModel(complaint: Complaint) {
+        await this.complaintRepository.destroy({ where: { id: complaint.id } });
+
+        return HttpStatus.OK;
     }
 
 }
