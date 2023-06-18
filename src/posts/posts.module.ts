@@ -1,15 +1,15 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { PostsController } from './posts.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { UsersModule } from 'src/users/users.module';
 import { Post } from './models/posts.model';
 import { JwtModule } from '@nestjs/jwt';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [
+    UsersModule,
     JwtModule,
-    forwardRef(() => UsersModule),
     SequelizeModule.forFeature([Post])
   ],
   providers: [PostsService],
