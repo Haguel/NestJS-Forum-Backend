@@ -4,12 +4,14 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { EditPostDto } from './dto/edit-post.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { JwtPayload } from 'src/common/jwt';
+import { BannedGuard } from 'src/user-management/ban/guards/banned.guard';
+import { MutedGuard } from 'src/user-management/mute/guards/muted.guard';
 
 @Controller('posts')
 export class PostsController {
     constructor(private postsService: PostsService) { }
 
-    @UseGuards(AuthGuard)
+    @UseGuards(AuthGuard, BannedGuard, MutedGuard)
     @Post()
     createPost(@Req() request, @Body() createPostDto: CreatePostDto) {
         const user: JwtPayload = request.user as JwtPayload;
