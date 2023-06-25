@@ -30,6 +30,18 @@ export class User extends Model<User, UserCreationArggs> {
     @Column({ type: DataTypes.STRING })
     banReason: string;
 
+    @Column({ type: DataTypes.DATE })
+    banExpiredAt: Date;
+
+    @Column({ type: DataTypes.BOOLEAN, defaultValue: false })
+    isMuted: boolean;
+
+    @Column({ type: DataTypes.STRING })
+    muteReason: string;
+
+    @Column({ type: DataTypes.DATE })
+    muteExpiredAt: Date;
+
     @BelongsToMany(() => Role, () => UserRole)
     roles: Role[];
 

@@ -5,12 +5,13 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/roles/guards/roles.guard';
 import { RolesDecorator } from 'src/roles/decorators/roles.decorator';
 import { convertStringToRoleTitle } from 'src/roles/common/roles.common';
+import { BannedGuard } from 'src/user-management/ban/guards/banned.guard';
 
 @Controller('complaints')
 export class ComplaintsController {
     constructor(private complaintsService: ComplaintsService) { }
 
-    @UseGuards(AuthGuard)
+    @UseGuards(AuthGuard, BannedGuard)
     @Post()
     createComplaint(@Body() createComplaintDto: CreateComplaintDto) {
         return this.complaintsService.createComplaint(createComplaintDto);

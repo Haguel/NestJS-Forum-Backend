@@ -6,7 +6,8 @@ import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { UsersModule } from './users/users.module';
 import { ComplaintsModule } from './complaints/complaints.module';
-import { ToolsModule } from './tools/tools.module';
+import { UserManagementModule } from './user-management/user-management.module';
+import { ComplaintManagementModule } from './complaint-management/complaint-management.module';
 
 @Module({
   imports: [
@@ -28,7 +29,8 @@ import { ToolsModule } from './tools/tools.module';
     UsersModule,
     ComplaintsModule,
     PostsModule,
-    ToolsModule,
+    UserManagementModule,
+    ComplaintManagementModule,
   ],
 })
 export class AppModule { }

@@ -6,9 +6,11 @@ import { Complaint } from './models/complaints.model';
 import { JwtModule } from '@nestjs/jwt';
 import { PostsModule } from 'src/posts/posts.module';
 import { UsersModule } from 'src/users/users.module';
+import { UserManagementModule } from 'src/user-management/user-management.module';
 
 @Module({
   imports: [
+    UserManagementModule,
     JwtModule,
     UsersModule,
     PostsModule,
