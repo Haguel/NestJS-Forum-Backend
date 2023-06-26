@@ -1,9 +1,9 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { canRoleBeRemoved, roleTitle } from './common/roles.common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Role } from './models/roles.model';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/models/users.model';
+import { SetRoleDto } from './dto/set-role.dto';
 
 @Injectable()
 export class RolesService {
@@ -12,15 +12,14 @@ export class RolesService {
         private usersService: UsersService
     ) { }
 
-    private
-    async getRole(roleTitle: roleTitle) {
+    async getRole(roleTitle: string) {
         try {
             const role: Role = await this.rolesRepository.findOne({
                 where: { title: roleTitle }
             })
 
             if (!role) {
-                throw new HttpException(`There is no role ${role} in database`, HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new HttpException(`There is no role with title ${roleTitle}`, HttpStatus.NOT_FOUND);
             }
 
             return role;
@@ -29,38 +28,13 @@ export class RolesService {
         }
     }
 
-    async addRoleToUser(userId: number, roleTitle: roleTitle) {
+    async setRole(userId: number, setRoleDto: SetRoleDto) {
         const user: User = await this.usersService.getUser(userId);
-        const userRole: Role = await this.getRole(roleTitle);
+        const role: Role = await this.getRole(setRoleDto.roleTitle);
 
-        await user.$add('role', userRole);
+        user.role = role;
         await user.save();
 
         return HttpStatus.OK;
-    }
-
-    async removeRoleFromUser(userId: number, roleTitle: roleTitle) {
-        try {
-            if (!canRoleBeRemoved(roleTitle)) {
-                throw new HttpException(`Role ${roleTitle} can't be removed from user`, HttpStatus.BAD_REQUEST);
-            }
-
-            const user: User = await this.usersService.getUser(userId);
-
-            let userRoleToRemove: Role;
-            user.roles.forEach((role: Role) => {
-                if (role.title === roleTitle) userRoleToRemove = role;
-            })
-
-            if (!userRoleToRemove) {
-                throw new HttpException(`Role ${roleTitle} hasn't been found in user's roles`, HttpStatus.BAD_REQUEST);
-            }
-
-            user.$remove('role', userRoleToRemove);
-
-            return HttpStatus.ACCEPTED;
-        } catch (err) {
-            console.log(err);
-        }
     }
 }

@@ -4,8 +4,8 @@ import { ComplaintsService } from './complaints.service';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/roles/guards/roles.guard';
 import { RolesDecorator } from 'src/roles/decorators/roles.decorator';
-import { convertStringToRoleTitle } from 'src/roles/common/roles.common';
 import { BannedGuard } from 'src/user-management/ban/guards/banned.guard';
+import { AccessLevel } from 'src/roles/common/role.common';
 
 @Controller('complaints')
 export class ComplaintsController {
@@ -17,21 +17,21 @@ export class ComplaintsController {
         return this.complaintsService.createComplaint(createComplaintDto);
     }
 
-    @RolesDecorator(convertStringToRoleTitle('admin'))
+    @RolesDecorator(AccessLevel.ADMIN)
     @UseGuards(AuthGuard, RolesGuard)
     @Get(':id')
     getComplaint(@Param('id', ParseIntPipe) id: number) {
         return this.complaintsService.getComplaint(id);
     }
 
-    @RolesDecorator(convertStringToRoleTitle('admin'))
+    @RolesDecorator(AccessLevel.ADMIN)
     @UseGuards(AuthGuard, RolesGuard)
     @Get()
     getAllComplaints() {
         return this.complaintsService.getAllComplaints();
     }
 
-    @RolesDecorator(convertStringToRoleTitle('admin'))
+    @RolesDecorator(AccessLevel.ADMIN)
     @UseGuards(AuthGuard, RolesGuard)
     @Delete(':id')
     removeComplaint(@Param('id', ParseIntPipe) id: number) {

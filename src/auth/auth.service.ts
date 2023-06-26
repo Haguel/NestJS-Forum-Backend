@@ -2,14 +2,14 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { RegisterUserDto } from './dto/register-user.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { InjectModel } from '@nestjs/sequelize';
 import { User } from 'src/users/models/users.model';
 import { LoginUserDto } from './dto/login-user.dto';
 import { JwtPayload, convertUserToJwtPayload } from 'src/common/jwt';
 import { RolesService } from 'src/roles/roles.service';
 import { Role } from 'src/roles/models/roles.model';
-import { convertStringToRoleTitle } from 'src/roles/common/roles.common';
 import { UsersService } from 'src/users/users.service';
+import { AccessLevel } from 'src/roles/common/role.common';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -40,9 +40,15 @@ export class AuthService {
 
     async register(registerUserDto: RegisterUserDto) {
         try {
-            const user: User = await this.usersService.createUser(registerUserDto);
-            const role: Role = await this.rolesService.getRole(convertStringToRoleTitle('user'));
-            user.$add('role', role);
+            const role: Role = await this.rolesService.getRole(AccessLevel[1]);
+
+            const createUserDto: CreateUserDto = {
+                ...registerUserDto,
+                role,
+                roleId: role.id
+            };
+
+            const user: User = await this.usersService.createUser(createUserDto);
 
             const jwtPayload: JwtPayload = convertUserToJwtPayload(user);
             const token: string = this.jwtService.sign(jwtPayload);
@@ -52,4 +58,25 @@ export class AuthService {
             console.log(err);
         }
     }
+
+    // The following code is for creating the first admin
+    async registerAdmin() {
+        const role: Role = await this.rolesService.getRole(AccessLevel[3]);
+
+        const createUserDto: CreateUserDto = {
+            email: "admin@gmail.com",
+            username: "admin",
+            password: "admin123!",
+            role,
+            roleId: role.id
+        };
+
+        const user: User = await this.usersService.createUser(createUserDto);
+
+        const jwtPayload: JwtPayload = convertUserToJwtPayload(user);
+        const token: string = this.jwtService.sign(jwtPayload);
+
+        return token;
+    }
+
 }

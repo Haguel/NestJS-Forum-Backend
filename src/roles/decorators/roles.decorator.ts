@@ -1,4 +1,3 @@
 import { SetMetadata } from "@nestjs/common";
-import { roleTitle } from "../common/roles.common";
 
-export const RolesDecorator = (...roleTitles: roleTitle[]) => SetMetadata('roleTitles', roleTitles);
+export const RolesDecorator = (accessLevel: number) => SetMetadata('accessLevel', accessLevel);

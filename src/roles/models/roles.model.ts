@@ -1,17 +1,18 @@
 import { DataTypes } from "sequelize";
-import { BelongsToMany, Column, Model, Table } from "sequelize-typescript";
+import { Column, HasMany, Model, Table } from "sequelize-typescript";
 import { User } from "src/users/models/users.model";
-import { UserRole } from "./user-roles.model";
-import { roleTitle } from "../common/roles.common";
 
 @Table({ tableName: 'roles', timestamps: false })
 export class Role extends Model<Role> {
     @Column({ type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, unique: true })
     id: number;
 
-    @Column({ type: DataTypes.STRING, defaultValue: 'user' })
-    title: roleTitle;
+    @Column({ type: DataTypes.INTEGER, defaultValue: 1 })
+    accessLevel: number;
 
-    @BelongsToMany(() => User, () => UserRole)
+    @Column({ type: DataTypes.STRING, defaultValue: 'user' })
+    title: string;
+
+    @HasMany(() => User)
     users: User[]
 }
