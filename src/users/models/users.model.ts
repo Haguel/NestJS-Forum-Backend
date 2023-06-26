@@ -1,13 +1,14 @@
 import { DataTypes } from "sequelize";
-import { BelongsToMany, Column, HasMany, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
 import { Post } from "src/posts/models/posts.model";
 import { Role } from "src/roles/models/roles.model";
-import { UserRole } from "src/roles/models/user-roles.model";
 
 export interface UserCreationArggs {
     email: string;
     username: string;
     passwordHash: string;
+    roleId: number;
+    role: Role;
 }
 
 @Table({ tableName: 'users' })
@@ -42,8 +43,12 @@ export class User extends Model<User, UserCreationArggs> {
     @Column({ type: DataTypes.DATE })
     muteExpiredAt: Date;
 
-    @BelongsToMany(() => Role, () => UserRole)
-    roles: Role[];
+    @ForeignKey(() => Role)
+    @Column({ allowNull: false })
+    roleId: number;
+
+    @BelongsTo(() => Role)
+    role: Role;
 
     @HasMany(() => Post)
     posts: Post[];

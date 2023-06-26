@@ -3,8 +3,8 @@ import { InjectModel } from '@nestjs/sequelize';
 import { User, UserCreationArggs } from './models/users.model';
 import { Post } from 'src/posts/models/posts.model';
 import { Role } from 'src/roles/models/roles.model';
-import { RegisterUserDto } from 'src/auth/dto/register-user.dto';
 import * as bcrypt from 'bcrypt';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -55,11 +55,11 @@ export class UsersService {
         }
     }
 
-    async createUser(registerUserDto: RegisterUserDto) {
+    async createUser(createUserDto: CreateUserDto) {
         const saltRounds: number = Number(process.env.SALT_ROUNDS);
-        const hash: string = await bcrypt.hash(registerUserDto.password, saltRounds);
+        const hash: string = await bcrypt.hash(createUserDto.password, saltRounds);
 
-        const createUserData: UserCreationArggs = { ...registerUserDto, passwordHash: hash }
+        const createUserData: UserCreationArggs = { ...createUserDto, passwordHash: hash }
         const user: User = await this.userRepository.create(createUserData);
 
         return user;

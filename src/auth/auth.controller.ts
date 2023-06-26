@@ -16,4 +16,10 @@ export class AuthController {
     register(@Body() registerUserDto: RegisterUserDto) {
         return this.authService.register(registerUserDto);
     }
+
+    // The following code is for creating the first admin
+    @Post('registerAdmin')
+    registerAdmin() {
+        return this.authService.registerAdmin()
+    }
 }
