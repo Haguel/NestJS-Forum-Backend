@@ -26,6 +26,13 @@ export class ComplaintsController {
 
     @RolesDecorator(convertStringToRoleTitle('admin'))
     @UseGuards(AuthGuard, RolesGuard)
+    @Get()
+    getAllComplaints() {
+        return this.complaintsService.getAllComplaints();
+    }
+
+    @RolesDecorator(convertStringToRoleTitle('admin'))
+    @UseGuards(AuthGuard, RolesGuard)
     @Delete(':id')
     removeComplaint(@Param('id', ParseIntPipe) id: number) {
         return this.complaintsService.removeComplaint(id);

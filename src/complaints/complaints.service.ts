@@ -28,13 +28,27 @@ export class ComplaintsService {
 
     async getComplaint(id: number) {
         try {
-            const complaint = await this.complaintRepository.findByPk(id);
+            const complaint: Complaint = await this.complaintRepository.findByPk(id);
 
             if (!complaint) {
                 throw new HttpException(`There is no complaint with id ${id}`, HttpStatus.NOT_FOUND);
             }
 
             return complaint;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    async getAllComplaints() {
+        try {
+            const complaints: Complaint[] = await this.complaintRepository.findAll();
+
+            if (!complaints.length) {
+                throw new HttpException("There are no complaints", HttpStatus.NOT_FOUND);
+            }
+
+            return complaints;
         } catch (err) {
             console.log(err);
         }

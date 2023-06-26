@@ -17,8 +17,8 @@ export class PostsService {
 
     async createPost(userId: number, createPostDto: CreatePostDto) {
         try {
-            const user = await this.usersService.getUser(userId); // userId from the auth guard - there is no need to check it
-            const post = await this.postRepository.create({ ...createPostDto, userId });
+            const user: User = await this.usersService.getUser(userId); // userId from the auth guard - there is no need to check it
+            const post: Post = await this.postRepository.create({ ...createPostDto, userId });
 
             user.posts.push(post);
 
@@ -30,7 +30,7 @@ export class PostsService {
 
     async getPost(id: number) {
         try {
-            const post = await this.postRepository.findOne({
+            const post: Post = await this.postRepository.findOne({
                 where: { id },
                 include: [Complaint, User],
             });
@@ -40,6 +40,20 @@ export class PostsService {
             }
 
             return post;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    async getAllPosts() {
+        try {
+            const posts: Post[] = await this.postRepository.findAll();
+
+            if (!posts.length) {
+                throw new HttpException("There are no posts", HttpStatus.NOT_FOUND);
+            }
+
+            return posts;
         } catch (err) {
             console.log(err);
         }

@@ -24,14 +24,19 @@ export class PostsController {
         return this.postsService.getPost(id);
     }
 
-    @UseGuards(AuthGuard)
+    @Get()
+    getAllPosts() {
+        return this.postsService.getAllPosts();
+    }
+
+    @UseGuards(AuthGuard, BannedGuard)
     @Put(':id')
     editPost(
-        @Param('id', ParseIntPipe) postiId: number,
+        @Param('id', ParseIntPipe) postId: number,
         @Req() request,
         @Body() editPostDto: EditPostDto
     ) {
-        return this.postsService.editPost(request.userId, postiId, editPostDto);
+        return this.postsService.editPost(request.userId, postId, editPostDto);
     }
 
     @UseGuards(AuthGuard)

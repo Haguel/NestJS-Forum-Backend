@@ -27,6 +27,20 @@ export class UsersService {
         }
     }
 
+    async getAllUsers() {
+        try {
+            const users: User[] = await this.userRepository.findAll();
+
+            if (!users.length) {
+                throw new HttpException("There are no users", HttpStatus.NOT_FOUND);
+            }
+
+            return users;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     async findUserByEmail(email: string) {
         try {
             const user = await this.userRepository.findOne({ where: { email } })

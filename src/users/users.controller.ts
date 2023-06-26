@@ -10,4 +10,9 @@ export class UsersController {
     getUser(@Param('id', ParseIntPipe) id: number) {
         return this.usersService.getUser(id);
     }
+
+    @Get()
+    getAllUsers() {
+        return this.usersService.getAllUsers();
+    }
 }
