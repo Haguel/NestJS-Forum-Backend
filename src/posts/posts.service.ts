@@ -6,19 +6,25 @@ import { Post } from './models/posts.model';
 import { EditPostDto } from './dto/edit-post.dto';
 import { Complaint } from 'src/complaints/models/complaints.model';
 import { User } from 'src/users/models/users.model';
+import { Like } from './models/likes.model';
+import { Sequelize } from 'sequelize';
 
 @Injectable()
 export class PostsService {
     constructor(
-        @InjectModel(Post) private postRepository: typeof Post,
+        @InjectModel(Post) private postsRepository: typeof Post,
+        @InjectModel(Like) private likesRepository: typeof Like,
         private usersService: UsersService
     ) { }
 
-
     async createPost(userId: number, createPostDto: CreatePostDto) {
         try {
-            const user: User = await this.usersService.getUser(userId); // userId from the auth guard - there is no need to check it
-            const post: Post = await this.postRepository.create({ ...createPostDto, userId });
+            // userId from the auth guard - there is no need to check it
+            const user: User = await this.usersService.getUser(userId);
+            const post: Post = await this.postsRepository.create(
+                { ...createPostDto, userId },
+                { include: [Like] }
+            );
 
             user.posts.push(post);
 
@@ -30,9 +36,9 @@ export class PostsService {
 
     async getPost(id: number) {
         try {
-            const post: Post = await this.postRepository.findOne({
+            const post: Post = await this.postsRepository.findOne({
                 where: { id },
-                include: [Complaint, User],
+                include: [Complaint, User, Like],
             });
 
             if (!post) {
@@ -47,7 +53,7 @@ export class PostsService {
 
     async getAllPosts() {
         try {
-            const posts: Post[] = await this.postRepository.findAll();
+            const posts: Post[] = await this.postsRepository.findAll();
 
             if (!posts.length) {
                 throw new HttpException("There are no posts", HttpStatus.NOT_FOUND);
@@ -63,7 +69,7 @@ export class PostsService {
         try {
             await this.getPost(postId);
 
-            const [, [updatedPost]] = await this.postRepository.update(
+            const [, [updatedPost]] = await this.postsRepository.update(
                 {
                     ...editPostDto,
                     userId,
@@ -84,9 +90,44 @@ export class PostsService {
         try {
             await this.getPost(id);
 
-            await this.postRepository.destroy({ where: { id } });
+            await this.postsRepository.destroy({ where: { id } });
 
             return HttpStatus.OK;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    async handleLike(postId: number, userId: number) {
+        try {
+            const user: User = await this.usersService.getUser(userId);
+            const post: Post = await this.getPost(postId);
+
+            const usersLike: Like = await this.likesRepository.findOne({
+                where: { userId, postId },
+            })
+
+            if (usersLike) {
+                post.likes = post.likes.filter((like) => like.id !== usersLike.id);
+                await post.save();
+
+                await this.usersService.removeLike(user, usersLike.id);
+
+                await usersLike.destroy();
+            } else {
+                const like: Like = await this.likesRepository.create({ userId, postId }, { include: [Post, User] });
+                like.post = post;
+                like.user = user;
+                await like.save();
+
+                !post.likes ? post.likes = [like] : post.likes.push(like);
+                await post.save();
+
+                !user.likes ? user.likes = [like] : user.likes.push(like);
+                await user.save();
+            }
+
+            return post.likes.length;
         } catch (err) {
             console.log(err);
         }

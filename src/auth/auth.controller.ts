@@ -17,9 +17,11 @@ export class AuthController {
         return this.authService.register(registerUserDto);
     }
 
-    // The following code is for creating the first admin
-    @Post('registerAdmin')
-    registerAdmin() {
-        return this.authService.registerAdmin()
+    // Use this request when you firstly start the app, it will init the first admin
+    // There is no need to use it after
+    // OR you can add admin by own in database
+    @Post('init')
+    initAdmin() {
+        return this.authService.initAdmin()
     }
 }

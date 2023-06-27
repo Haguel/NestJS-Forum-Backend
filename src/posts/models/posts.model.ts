@@ -2,6 +2,7 @@ import { DataTypes } from "sequelize";
 import { BelongsTo, Column, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
 import { Complaint } from "../../complaints/models/complaints.model";
 import { User } from "src/users/models/users.model";
+import { Like } from "./likes.model";
 
 interface PostCreationArggs {
     userId: number;
@@ -19,6 +20,9 @@ export class Post extends Model<Post, PostCreationArggs> {
 
     @Column({ type: DataTypes.STRING })
     description: string;
+
+    @HasMany(() => Like)
+    likes: Like[];
 
     @ForeignKey(() => User)
     @Column({ allowNull: false })

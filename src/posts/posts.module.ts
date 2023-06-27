@@ -7,6 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from 'src/users/users.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { UserManagementModule } from 'src/user-management/user-management.module';
+import { Like } from './models/likes.model';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { UserManagementModule } from 'src/user-management/user-management.module
     UsersModule,
     AuthModule,
     JwtModule,
-    SequelizeModule.forFeature([Post])
+    SequelizeModule.forFeature([Post, Like])
   ],
   providers: [PostsService],
   controllers: [PostsController],
