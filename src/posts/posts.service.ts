@@ -8,6 +8,7 @@ import { Complaint } from 'src/complaints/models/complaints.model';
 import { User } from 'src/users/models/users.model';
 import { Like } from './models/likes.model';
 import { Sequelize } from 'sequelize';
+import { AccessLevel } from 'src/roles/common/role.common';
 
 @Injectable()
 export class PostsService {
@@ -86,11 +87,21 @@ export class PostsService {
         }
     }
 
-    async removePost(id: number) {
+    async removePost(userId: number, postId: number) {
         try {
-            await this.getPost(id);
+            const post: Post = await this.getPost(postId);
 
-            await this.postsRepository.destroy({ where: { id } });
+            if (post.userId === userId) {
+                await post.destroy();
+            } else {
+                const user: User = await this.usersService.getUser(userId);
+
+                if (user.role.accessLevel >= AccessLevel.ADMIN) {
+                    await post.destroy();
+                } else {
+                    throw new HttpException(`User ${user.username} with id ${userId} can't remove post of other`, HttpStatus.FORBIDDEN);
+                }
+            }
 
             return HttpStatus.OK;
         } catch (err) {

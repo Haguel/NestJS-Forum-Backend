@@ -41,8 +41,10 @@ export class PostsController {
 
     @UseGuards(AuthGuard)
     @Delete(':id')
-    removePost(@Param('id', ParseIntPipe) id: number) {
-        return this.postsService.removePost(id);
+    removePost(@Req() request, @Param('id', ParseIntPipe) postId: number) {
+        const user: JwtPayload = request.user as JwtPayload;
+
+        return this.postsService.removePost(user.userId, postId);
     }
 
     @UseGuards(AuthGuard)
