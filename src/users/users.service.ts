@@ -5,6 +5,7 @@ import { Post } from 'src/posts/models/posts.model';
 import { Role } from 'src/roles/models/roles.model';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
+import { Like } from 'src/posts/models/likes.model';
 
 @Injectable()
 export class UsersService {
@@ -14,7 +15,7 @@ export class UsersService {
         try {
             const user: User = await this.userRepository.findOne({
                 where: { id },
-                include: [Post, Role]
+                include: [Post, Role, Like]
             });
 
             if (!user) {
@@ -29,7 +30,7 @@ export class UsersService {
 
     async getAllUsers() {
         try {
-            const users: User[] = await this.userRepository.findAll();
+            const users: User[] = await this.userRepository.findAll({ include: [Post, Like] });
 
             if (!users.length) {
                 throw new HttpException("There are no users", HttpStatus.NOT_FOUND);
@@ -62,6 +63,13 @@ export class UsersService {
         const createUserData: UserCreationArggs = { ...createUserDto, passwordHash: hash }
         const user: User = await this.userRepository.create(createUserData);
 
+        user.likes = [];
+
         return user;
+    }
+
+    async removeLike(user: User, likeId: number) {
+        user.likes = user.likes.filter((like) => like.id !== likeId);
+        await user.save();
     }
 }

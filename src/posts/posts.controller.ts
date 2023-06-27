@@ -44,4 +44,12 @@ export class PostsController {
     removePost(@Param('id', ParseIntPipe) id: number) {
         return this.postsService.removePost(id);
     }
+
+    @UseGuards(AuthGuard)
+    @Post("handleLike/:id")
+    handleLike(@Req() request, @Param('id', ParseIntPipe) postId: number) {
+        const user: JwtPayload = request.user as JwtPayload;
+
+        return this.postsService.handleLike(postId, user.userId);
+    }
 }

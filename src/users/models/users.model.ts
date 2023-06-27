@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import { BelongsTo, Column, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
+import { Like } from "src/posts/models/likes.model";
 import { Post } from "src/posts/models/posts.model";
 import { Role } from "src/roles/models/roles.model";
 
@@ -52,4 +53,7 @@ export class User extends Model<User, UserCreationArggs> {
 
     @HasMany(() => Post)
     posts: Post[];
+
+    @HasMany(() => Like)
+    likes: Like[]
 }
