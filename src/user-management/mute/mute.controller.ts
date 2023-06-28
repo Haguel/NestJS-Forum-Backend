@@ -1,4 +1,4 @@
-import { Body, Controller, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesDecorator } from 'src/roles/decorators/roles.decorator';
 import { RolesGuard } from 'src/roles/guards/roles.guard';
@@ -13,13 +13,15 @@ export class MuteController {
     @RolesDecorator(AccessLevel.MODERATOR)
     @UseGuards(AuthGuard, RolesGuard)
     @Post('mute')
+    @HttpCode(HttpStatus.OK)
     mute(@Body() muteDto: MuteDto) {
-        return this.muteService.mute(muteDto);
+        this.muteService.mute(muteDto);
     }
 
     @RolesDecorator(AccessLevel.MODERATOR)
     @UseGuards(AuthGuard, RolesGuard)
     @Post('unmute/:id')
+    @HttpCode(HttpStatus.OK)
     unmute(@Param('id', ParseIntPipe) id: number) {
         return this.muteService.unmute(id);
     }

@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ComplaintsService } from 'src/complaints/complaints.service';
 import { PostsService } from 'src/posts/posts.service';
 import { ComplaintMuteDto } from './dto/complaint-mute.dto';
@@ -15,21 +15,15 @@ export class ComplaintMuteService {
     ) { }
 
     async mute(complaintMuteDto: ComplaintMuteDto) {
-        try {
-            const complaint: Complaint = await this.complaintsService.getComplaint(complaintMuteDto.complaintId);
+        const complaint: Complaint = await this.complaintsService.getComplaint(complaintMuteDto.complaintId);
 
-            if (!complaint) {
-                throw new HttpException(`Complaint with id ${complaintMuteDto.complaintId} doesn't exist`, HttpStatus.NOT_FOUND);
-            }
+        if (!complaint) throw new NotFoundException(`Complaint with id ${complaintMuteDto.complaintId} doesn't exist`);
 
-            const post: Post = await this.postsService.getPost(complaint.postId);
-            const muteExpiredAt: Date | null = convertStringToDate(complaintMuteDto.muteExpiredAt);
+        const post: Post = await this.postsService.getPost(complaint.postId);
+        const muteExpiredAt: Date | null = convertStringToDate(complaintMuteDto.muteExpiredAt);
 
-            await this.muteWithModel(post.user, complaintMuteDto.muteReason, muteExpiredAt);
-            await this.complaintsService.removeComplaintWithModel(complaint);
-        } catch (err) {
-            console.log(err);
-        }
+        await this.muteWithModel(post.user, complaintMuteDto.muteReason, muteExpiredAt);
+        await this.complaintsService.removeComplaintWithModel(complaint);
     }
 
     private async muteWithModel(user: User, reason: string, muteExpiredAt: Date) {
@@ -38,7 +32,5 @@ export class ComplaintMuteService {
         user.muteExpiredAt = muteExpiredAt;
 
         await user.save();
-
-        return HttpStatus.OK;
     }
 }

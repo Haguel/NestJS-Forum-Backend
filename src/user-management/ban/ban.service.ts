@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { User } from 'src/users/models/users.model';
 import { UsersService } from 'src/users/users.service';
 import { BanDto } from './dto/ban.dto';
@@ -15,13 +15,11 @@ export class BanService {
         user.banExpiredAt = banExpiredAt;
 
         await user.save();
-
-        return HttpStatus.OK;
     }
 
     async ban(banDto: BanDto) {
         const user: User = await this.usersService.getUser(banDto.userId);
-        let banExpiredAt: Date | null = convertStringToDate(banDto.banExpiredAt);
+        const banExpiredAt: Date | null = convertStringToDate(banDto.banExpiredAt);
 
         this.banWithModel(user, banDto.banReason, banExpiredAt);
     }
@@ -34,7 +32,5 @@ export class BanService {
         user.banExpiredAt = null;
 
         await user.save();
-
-        return HttpStatus.OK;
     }
 }

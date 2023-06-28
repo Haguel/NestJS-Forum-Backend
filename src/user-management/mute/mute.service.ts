@@ -1,8 +1,8 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { User } from 'src/users/models/users.model';
 import { UsersService } from 'src/users/users.service';
-import convertStringToDate from 'src/common/convertStringToDate';
 import { MuteDto } from './dto/mute.dto';
+import convertStringToDate from 'src/common/convertStringToDate';
 
 @Injectable()
 export class MuteService {
@@ -14,8 +14,6 @@ export class MuteService {
         user.muteExpiredAt = muteExpiredAt;
 
         await user.save();
-
-        return HttpStatus.OK;
     }
 
     async mute(muteDto: MuteDto) {
@@ -33,7 +31,5 @@ export class MuteService {
         user.muteExpiredAt = null;
 
         await user.save();
-
-        return HttpStatus.OK;
     }
 }

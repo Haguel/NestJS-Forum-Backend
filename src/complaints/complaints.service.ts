@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Complaint } from './models/complaints.model';
 import { PostsService } from '../posts/posts.service';
@@ -13,61 +13,38 @@ export class ComplaintsService {
     ) { }
 
     async createComplaint(createComplaintDto: CreateComplaintDto) {
-        try {
-            const post: Post = await this.postsService.getPost(createComplaintDto.postId);
+        const post: Post = await this.postsService.getPost(createComplaintDto.postId);
 
-            const complaint: Complaint = await this.complaintRepository.create(createComplaintDto);
+        const complaint: Complaint = await this.complaintRepository.create(createComplaintDto);
 
-            post.complaints.push(complaint);
+        post.complaints.push(complaint);
 
-            return complaint;
-        } catch (err) {
-            console.log(err);
-        }
+        return complaint;
     }
 
     async getComplaint(id: number) {
-        try {
-            const complaint: Complaint = await this.complaintRepository.findByPk(id);
+        const complaint: Complaint = await this.complaintRepository.findByPk(id);
 
-            if (!complaint) {
-                throw new HttpException(`There is no complaint with id ${id}`, HttpStatus.NOT_FOUND);
-            }
+        if (!complaint) throw new NotFoundException(`There is no complaint with id ${id}`);
 
-            return complaint;
-        } catch (err) {
-            console.log(err);
-        }
+        return complaint;
     }
 
     async getAllComplaints() {
-        try {
-            const complaints: Complaint[] = await this.complaintRepository.findAll();
+        const complaints: Complaint[] = await this.complaintRepository.findAll();
 
-            if (!complaints.length) {
-                throw new HttpException("There are no complaints", HttpStatus.NOT_FOUND);
-            }
+        if (!complaints.length) throw new NotFoundException("There are no complaints");
 
-            return complaints;
-        } catch (err) {
-            console.log(err);
-        }
+        return complaints;
     }
 
     async removeComplaint(id: number) {
-        try {
-            const complaint: Complaint = await this.getComplaint(id);
+        const complaint: Complaint = await this.getComplaint(id);
 
-            await this.removeComplaintWithModel(complaint);
-        } catch (err) {
-            console.log(err);
-        }
+        await this.removeComplaintWithModel(complaint);
     }
 
     async removeComplaintWithModel(complaint: Complaint) {
         await this.complaintRepository.destroy({ where: { id: complaint.id } });
-
-        return HttpStatus.OK;
     }
-
 }

@@ -1,4 +1,4 @@
-import { Delete, Controller, Post, Put, Body, Param, Get, ParseIntPipe, UseGuards, Req } from '@nestjs/common';
+import { Delete, Controller, Post, Put, Body, Param, Get, ParseIntPipe, UseGuards, Req, HttpCode, HttpStatus } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { EditPostDto } from './dto/edit-post.dto';
@@ -41,10 +41,11 @@ export class PostsController {
 
     @UseGuards(AuthGuard)
     @Delete(':id')
+    @HttpCode(HttpStatus.OK)
     removePost(@Req() request, @Param('id', ParseIntPipe) postId: number) {
         const user: JwtPayload = request.user as JwtPayload;
 
-        return this.postsService.removePost(user.userId, postId);
+        this.postsService.removePost(user.userId, postId);
     }
 
     @UseGuards(AuthGuard)

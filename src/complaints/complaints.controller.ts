@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
 import { CreateComplaintDto } from './dto/create-complaint.dto';
 import { ComplaintsService } from './complaints.service';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
@@ -34,7 +34,8 @@ export class ComplaintsController {
     @RolesDecorator(AccessLevel.ADMIN)
     @UseGuards(AuthGuard, RolesGuard)
     @Delete(':id')
+    @HttpCode(HttpStatus.OK)
     removeComplaint(@Param('id', ParseIntPipe) id: number) {
-        return this.complaintsService.removeComplaint(id);
+        this.complaintsService.removeComplaint(id);
     }
 }

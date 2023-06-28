@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Role } from './models/roles.model';
 import { UsersService } from 'src/users/users.service';
@@ -14,19 +14,13 @@ export class RolesService {
     ) { }
 
     async getRole(roleTitle: string) {
-        try {
-            const role: Role = await this.rolesRepository.findOne({
-                where: { title: roleTitle }
-            })
+        const role: Role = await this.rolesRepository.findOne({
+            where: { title: roleTitle }
+        })
 
-            if (!role) {
-                throw new HttpException(`There is no role with title ${roleTitle}`, HttpStatus.NOT_FOUND);
-            }
+        if (!role) throw new NotFoundException(`There is no role with title ${roleTitle}`);
 
-            return role;
-        } catch (err) {
-            console.log(err);
-        }
+        return role;
     }
 
     async setRole(userId: number, setRoleDto: SetRoleDto) {
@@ -35,8 +29,6 @@ export class RolesService {
 
         user.role = role;
         await user.save();
-
-        return HttpStatus.OK;
     }
 
     // Use this request when you firstly start the app, it will init all the needed roles

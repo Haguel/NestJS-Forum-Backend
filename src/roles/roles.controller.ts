@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, UseGuards, ParseIntPipe, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, UseGuards, ParseIntPipe, Post, HttpStatus, HttpCode } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from './guards/roles.guard';
@@ -21,11 +21,12 @@ export class RolesController {
     @RolesDecorator(AccessLevel.ADMIN)
     @UseGuards(AuthGuard, RolesGuard)
     @Post('add/:id')
+    @HttpCode(HttpStatus.OK)
     setRole(
         @Param('id', ParseIntPipe) userId: number,
         @Body() setRoleDto: SetRoleDto
     ) {
-        return this.rolesService.setRole(userId, setRoleDto);
+        this.rolesService.setRole(userId, setRoleDto);
     }
 
     // Use this request when you firstly start the app, it will init all the needed roles

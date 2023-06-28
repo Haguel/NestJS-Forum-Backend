@@ -1,6 +1,5 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { RegisterUserDto } from './dto/register-user.dto';
-import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/models/users.model';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -10,6 +9,7 @@ import { Role } from 'src/roles/models/roles.model';
 import { UsersService } from 'src/users/users.service';
 import { AccessLevel } from 'src/roles/common/role.common';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -20,43 +20,34 @@ export class AuthService {
     ) { }
 
     async login(loginUserDto: LoginUserDto) {
-        try {
-            const user: User = await this.usersService.findUserByEmail(loginUserDto.email);
 
-            const isPasswordMatch: boolean = await bcrypt.compare(loginUserDto.password, user.passwordHash);
+        const user: User = await this.usersService.findUserByEmail(loginUserDto.email);
 
-            if (!isPasswordMatch) {
-                throw new HttpException('Wrong email or password', HttpStatus.FORBIDDEN);
-            }
+        const isPasswordMatch: boolean = await bcrypt.compare(loginUserDto.password, user.passwordHash);
 
-            const jwtPayload: JwtPayload = convertUserToJwtPayload(user);
-            const token: string = this.jwtService.sign(jwtPayload);
+        if (!isPasswordMatch) throw new ForbiddenException("Wrong email or password");
 
-            return token;
-        } catch (err) {
-            console.log(err);
-        }
+        const jwtPayload: JwtPayload = convertUserToJwtPayload(user);
+        const token: string = this.jwtService.sign(jwtPayload);
+
+        return token;
     }
 
     async register(registerUserDto: RegisterUserDto) {
-        try {
-            const role: Role = await this.rolesService.getRole(AccessLevel[1]);
+        const role: Role = await this.rolesService.getRole(AccessLevel[1]);
 
-            const createUserDto: CreateUserDto = {
-                ...registerUserDto,
-                role,
-                roleId: role.id
-            };
+        const createUserDto: CreateUserDto = {
+            ...registerUserDto,
+            role,
+            roleId: role.id
+        };
 
-            const user: User = await this.usersService.createUser(createUserDto);
+        const user: User = await this.usersService.createUser(createUserDto);
 
-            const jwtPayload: JwtPayload = convertUserToJwtPayload(user);
-            const token: string = this.jwtService.sign(jwtPayload);
+        const jwtPayload: JwtPayload = convertUserToJwtPayload(user);
+        const token: string = this.jwtService.sign(jwtPayload);
 
-            return token;
-        } catch (err) {
-            console.log(err);
-        }
+        return token;
     }
 
     // Use this request when you firstly start the app, it will init the first admin

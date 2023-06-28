@@ -1,59 +1,41 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User, UserCreationArggs } from './models/users.model';
 import { Post } from 'src/posts/models/posts.model';
 import { Role } from 'src/roles/models/roles.model';
-import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Like } from 'src/posts/models/likes.model';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
     constructor(@InjectModel(User) private userRepository: typeof User) { }
 
     async getUser(id: number) {
-        try {
-            const user: User = await this.userRepository.findOne({
-                where: { id },
-                include: [Post, Role, Like]
-            });
+        const user: User = await this.userRepository.findOne({
+            where: { id },
+            include: [Post, Role, Like]
+        });
 
-            if (!user) {
-                throw new HttpException(`There is no user with id ${id}`, HttpStatus.NOT_FOUND);
-            }
+        if (!user) throw new NotFoundException(`There is no user with id ${id}`);
 
-            return user;
-        } catch (err) {
-            console.log(err);
-        }
+        return user;
     }
 
     async getAllUsers() {
-        try {
-            const users: User[] = await this.userRepository.findAll({ include: [Post, Like] });
+        const users: User[] = await this.userRepository.findAll({ include: [Post, Like] });
 
-            if (!users.length) {
-                throw new HttpException("There are no users", HttpStatus.NOT_FOUND);
-            }
+        if (!users.length) throw new NotFoundException("There are no users");
 
-            return users;
-        } catch (err) {
-            console.log(err);
-        }
+        return users;
     }
 
     async findUserByEmail(email: string) {
-        try {
-            const user = await this.userRepository.findOne({ where: { email } })
+        const user = await this.userRepository.findOne({ where: { email } })
 
-            if (!user) {
-                throw new HttpException('There is no users with such email', HttpStatus.NOT_FOUND);
-            }
+        if (!user) throw new NotFoundException('There is no users with such email');
 
-            return user;
-        } catch (err) {
-            console.log(err);
-        }
+        return user;
     }
 
     async createUser(createUserDto: CreateUserDto) {

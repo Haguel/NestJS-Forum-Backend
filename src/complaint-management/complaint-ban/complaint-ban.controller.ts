@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { RolesDecorator } from 'src/roles/decorators/roles.decorator';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/roles/guards/roles.guard';
@@ -13,7 +13,8 @@ export class ComplaintBanController {
     @RolesDecorator(AccessLevel.MODERATOR)
     @UseGuards(AuthGuard, RolesGuard)
     @Post()
+    @HttpCode(HttpStatus.OK)
     ban(@Body() complaintBanDto: ComplaintBanDto) {
-        return this.complaintBanService.ban(complaintBanDto);
+        this.complaintBanService.ban(complaintBanDto);
     }
 }

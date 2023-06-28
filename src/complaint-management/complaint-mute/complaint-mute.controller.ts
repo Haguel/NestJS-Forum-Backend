@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { ComplaintMuteService } from './complaint-mute.service';
 import { RolesDecorator } from 'src/roles/decorators/roles.decorator';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
@@ -13,7 +13,8 @@ export class ComplaintMuteController {
     @RolesDecorator(AccessLevel.MODERATOR)
     @UseGuards(AuthGuard, RolesGuard)
     @Post()
+    @HttpCode(HttpStatus.OK)
     mute(@Body() complaintMuteDto: ComplaintMuteDto) {
-        return this.complaintMuteService.mute(complaintMuteDto);
+        this.complaintMuteService.mute(complaintMuteDto);
     }
 }
