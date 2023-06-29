@@ -16,27 +16,29 @@ export class BannedGuard implements CanActivate {
         const payload: JwtPayload = request.user;
 
         const user: User = await this.usersService.getUser(payload.userId);
-        let canActivate: boolean = true;
-
-        if (user.isBanned) {
-            if (user.banExpiredAt) {
-                const currentDate: Date = new Date();
-                const banExpiredAtDate: Date = user.banExpiredAt;
-
-                if (currentDate > banExpiredAtDate) {
-                    this.banService.unbanUser(user.id);
-                }
-
-                canActivate = false;
-            }
-
-            canActivate = false;
-        }
+        const canActivate: boolean = !(await this.isBanned(user));
 
         if (!canActivate) {
             throw new HttpException(`User ${user.username} is banned`, HttpStatus.FORBIDDEN);
         }
 
         return canActivate;
+    }
+
+    async isBanned(user: User): Promise<boolean> {
+        if (user.isBanned) {
+            if (user.banExpiredAt) {
+                const currentDate: Date = new Date();
+                const banExpiredAtDate: Date = user.banExpiredAt;
+
+                if (currentDate > banExpiredAtDate) {
+                    await this.banService.unbanUser(user.id);
+
+                    return false;
+                }
+            }
+        } else return false;
+
+        return true;
     }
 }

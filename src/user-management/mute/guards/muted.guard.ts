@@ -16,8 +16,16 @@ export class MutedGuard implements CanActivate {
         const payload: JwtPayload = request.user;
 
         const user: User = await this.usersService.getUser(payload.userId);
-        let canActivate: boolean = true;
+        const canActivate: boolean = !(await this.isMuted(user));
 
+        if (!canActivate) {
+            throw new HttpException(`User ${user.username} is muted`, HttpStatus.FORBIDDEN);
+        }
+
+        return canActivate;
+    }
+
+    async isMuted(user: User): Promise<boolean> {
         if (user.isMuted) {
             if (user.muteExpiredAt) {
                 const currentDate: Date = new Date();
@@ -25,18 +33,12 @@ export class MutedGuard implements CanActivate {
 
                 if (currentDate > muteExpiredAtDate) {
                     await this.muteService.unmute(user.id);
+
+                    return false;
                 }
-
-                canActivate = false;
             }
+        } else return false;
 
-            canActivate = false;
-        }
-
-        if (!canActivate) {
-            throw new HttpException(`User ${user.username} is muted`, HttpStatus.FORBIDDEN);
-        }
-
-        return canActivate;
+        return true;
     }
 }
