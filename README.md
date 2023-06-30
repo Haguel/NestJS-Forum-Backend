@@ -7,7 +7,7 @@
 Here is my NestJS pet project. It provides a platform for users to make/edit/remove and like posts. Additionally there is logic for admins and moderators to manage complaints or just mute and ban users.
 
 ## Features
-- User registration and authentication
+- User authentication and authorization
 - Create, read, update, and delete posts
 - Create, read, remove complaints
 - Liking system for posts
