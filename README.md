@@ -1,73 +1,55 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+![NestJS Logo](https://nestjs.com/img/logo_text.svg) 
+# NestJS backend for a forum
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 ## Description
+Here is my NestJS pet project. It provides a platform for users to make/edit/remove and like posts. Additionally there is logic for admins and moderators to manage complaints or just mute and ban users.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Features
+- User registration and authentication
+- Create, read, update, and delete posts
+- Create, read, remove complaints
+- Liking system for posts
+- User roles and permissions
+- Moderation and administration tools
+- Swagger documentation
+- PostgreSQL as database
 
 ## Installation
 
-```bash
-$ npm install
-```
+1. Clone the repository:
 
-## Running the app
+   ```bash
+   git clone https://github.com/your-username/nestjs-forum.git
 
-```bash
-# development
-$ npm run start
+2. Install dependencies
+   ```bash
+    cd nestjs-forum-backend
+    npm install
 
-# watch mode
-$ npm run start:dev
+3. Setup test.env file
+   ```bash
+    PORT=3000
+    DB_HOST=localhost
+    DB_PORT=5432
+    DB_PASSWORD=root
+    DB_USERNAME=postgres
+    DB_NAME=nest_forum_backend
+    SALT_ROUNDS=6
+    JWT_SECRET=secret
 
-# production mode
-$ npm run start:prod
-```
+4. Start the development server
+   ```bash
+   npm run start:dev
 
-## Test
+## Libraries I used
+- ![nestjs/config](https://img.shields.io/badge/nestjs%2Fconfig-yellowgreen?style=flat) for env.
+- ![cross-env](https://img.shields.io/badge/cross--env-brightgreen?style=flat) for starting with different env files in different modes
+- ![nestjs/jwt](https://img.shields.io/badge/nestjs%2Fjwt-red?style=flat) for jwt
+- ![bcrypt](https://img.shields.io/badge/bcrypt-orange?style=flat) for crypting passwords
+- ![class-transformer](https://img.shields.io/badge/class--transformer-yellow?style=flat) ![class-validator](https://img.shields.io/badge/class--validator-brightgreen?style=flat) for data validations
+- ![pg](https://img.shields.io/badge/pg-lightblue?style=flat) ![pg-hstore](https://img.shields.io/badge/pg--hstore-blueviolet?style=flat) drivers for PostgreSQL
+- ![nestjs/swagger](https://img.shields.io/badge/nestjs%2Fswagger-red?style=flat) for api documentation
+- ![nestjs/sequelize](https://img.shields.io/badge/nestjs%2Fsequelize-blue?style=flat) ![sequelize](https://img.shields.io/badge/sequelize-blue?style=flat) ![sequelize-typescript](https://img.shields.io/badge/sequelize--typescript-blueviolet?style=flat) ![@types/sequelize](https://img.shields.io/badge/%40types%2Fsequelize-lightblue?style=flat) for sequelize&sequelize-typescript
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
