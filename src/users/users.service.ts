@@ -11,7 +11,7 @@ import * as bcrypt from 'bcrypt';
 export class UsersService {
     constructor(@InjectModel(User) private userRepository: typeof User) { }
 
-    async getUser(id: number) {
+    async getUser(id: number): Promise<User> {
         const user: User = await this.userRepository.findOne({
             where: { id },
             include: [Post, Role, Like]
@@ -22,7 +22,7 @@ export class UsersService {
         return user;
     }
 
-    async getAllUsers() {
+    async getAllUsers(): Promise<User[]> {
         const users: User[] = await this.userRepository.findAll({ include: [Post, Like] });
 
         if (!users.length) throw new NotFoundException("There are no users");
@@ -30,7 +30,7 @@ export class UsersService {
         return users;
     }
 
-    async findUserByEmail(email: string) {
+    async findUserByEmail(email: string): Promise<User> {
         const user = await this.userRepository.findOne({ where: { email } })
 
         if (!user) throw new NotFoundException('There is no users with such email');
@@ -38,7 +38,7 @@ export class UsersService {
         return user;
     }
 
-    async createUser(createUserDto: CreateUserDto) {
+    async createUser(createUserDto: CreateUserDto): Promise<User> {
         const existedUser: User = await this.findUserByEmail(createUserDto.email);
 
         if (existedUser) throw new ConflictException(`The email ${existedUser.email} has already been registered`)
@@ -54,8 +54,13 @@ export class UsersService {
         return user;
     }
 
-    async removeLike(user: User, likeId: number) {
+    async removeLike(user: User, likeId: number): Promise<void> {
         user.likes = user.likes.filter((like) => like.id !== likeId);
+        await user.save();
+    }
+
+    async addLike(user: User, like: Like): Promise<void> {
+        !user.likes ? user.likes = [like] : user.likes.push(like);
         await user.save();
     }
 }

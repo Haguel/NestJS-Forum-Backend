@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtPayload } from 'src/common/jwt';
 import { UsersService } from '../../../users/users.service';
 import { User } from '../../../users/models/users.model';
@@ -18,9 +18,7 @@ export class BannedGuard implements CanActivate {
         const user: User = await this.usersService.getUser(payload.userId);
         const canActivate: boolean = !(await this.isBanned(user));
 
-        if (!canActivate) {
-            throw new HttpException(`User ${user.username} is banned`, HttpStatus.FORBIDDEN);
-        }
+        if (!canActivate) throw new ForbiddenException(`User ${user.username} is banned`);
 
         return canActivate;
     }

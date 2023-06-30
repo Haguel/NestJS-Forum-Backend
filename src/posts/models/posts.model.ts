@@ -13,27 +13,17 @@ class PostCreationArggs {
 
 @Table({ tableName: 'posts' })
 export class Post extends Model<Post, PostCreationArggs> {
-    @ApiPropertyOptional({
-        type: Number,
-        nullable: false,
-        example: 1,
-        description: "Unique id"
-    })
+    @ApiPropertyOptional({ type: Number, nullable: false, example: 1, description: "Unique id" })
     @Column({ type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, unique: true })
     id: number;
 
-    @ApiProperty({
-        type: String,
-        nullable: false,
-        example: "I like shaurma too",
-    })
+    @ApiProperty({ type: String, nullable: false, example: "I like shaurma too" })
     @Column({ type: DataTypes.STRING, allowNull: false })
     title: string;
 
 
     @ApiProperty({
-        type: String,
-        nullable: false,
+        type: String, nullable: false,
         example: "Btw I really like shaurma. The origin of shaurma is somewhere in Arabia but it's very popular here, in Ukraine!",
     })
     @Column({ type: DataTypes.STRING, allowNull: false })
@@ -42,11 +32,7 @@ export class Post extends Model<Post, PostCreationArggs> {
     @HasMany(() => Like)
     likes: Like[];
 
-    @ApiProperty({
-        type: Number,
-        nullable: false,
-        example: 1,
-    })
+    @ApiProperty({ type: Number, nullable: false, example: 1 })
     @ForeignKey(() => User)
     @Column({ allowNull: false })
     userId: number;

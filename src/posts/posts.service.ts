@@ -102,8 +102,7 @@ export class PostsService {
             !post.likes ? post.likes = [like] : post.likes.push(like);
             await post.save();
 
-            !user.likes ? user.likes = [like] : user.likes.push(like);
-            await user.save();
+            await this.usersService.addLike(user, like);
         }
 
         return post.likes.length;

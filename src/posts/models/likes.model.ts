@@ -10,11 +10,7 @@ export class LikeCreationArggs {
 
 @Table({ timestamps: false, tableName: 'likes' })
 export class Like extends Model<Like> {
-    @ApiProperty({
-        type: Number,
-        nullable: false,
-        example: 1,
-    })
+    @ApiProperty({ type: Number, nullable: false, example: 1 })
     @ForeignKey(() => Post)
     @Column({ allowNull: false })
     postId: number;
@@ -22,11 +18,7 @@ export class Like extends Model<Like> {
     @BelongsTo(() => Post)
     post: Post;
 
-    @ApiProperty({
-        type: Number,
-        nullable: false,
-        example: 1,
-    })
+    @ApiProperty({ type: Number, nullable: false, example: 1 })
     @ForeignKey(() => User)
     @Column({ allowNull: false })
     userId: number;
