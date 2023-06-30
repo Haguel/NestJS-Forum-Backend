@@ -14,7 +14,7 @@ export class ComplaintBanService {
         private postsService: PostsService,
     ) { }
 
-    async ban(complaintBanDto: ComplaintBanDto) {
+    async ban(complaintBanDto: ComplaintBanDto): Promise<void> {
         const complaint: Complaint = await this.complaintsService.getComplaint(complaintBanDto.complaintId);
 
         if (!complaint) throw new NotFoundException(`Complaint with id ${complaintBanDto.complaintId} doesn't exist`);
@@ -26,7 +26,7 @@ export class ComplaintBanService {
         await this.complaintsService.removeComplaintWithModel(complaint);
     }
 
-    private async banWithModel(user: User, reason: string, banExpiredAt?: Date) {
+    private async banWithModel(user: User, reason: string, banExpiredAt?: Date): Promise<void> {
         user.isBanned = true;
         user.banReason = reason;
         user.banExpiredAt = banExpiredAt;

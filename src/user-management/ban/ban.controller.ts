@@ -5,24 +5,34 @@ import { RolesGuard } from 'src/roles/guards/roles.guard';
 import { BanDto } from './dto/ban.dto';
 import { BanService } from './ban.service';
 import { AccessLevel } from 'src/roles/common/role.common';
+import { ApiForbiddenResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags("User management")
 @Controller()
 export class BanController {
     constructor(private banService: BanService) { }
 
+    @HttpCode(HttpStatus.OK)
+    @ApiInternalServerErrorResponse()
+    @ApiNotFoundResponse()
+    @ApiForbiddenResponse()
+    @ApiOkResponse()
     @RolesDecorator(AccessLevel.MODERATOR)
     @UseGuards(AuthGuard, RolesGuard)
     @Post('ban')
-    @HttpCode(HttpStatus.OK)
-    ban(@Body() banDto: BanDto) {
-        this.banService.ban(banDto);
+    async ban(@Body() banDto: BanDto): Promise<void> {
+        await this.banService.ban(banDto);
     }
 
+    @HttpCode(HttpStatus.OK)
+    @ApiInternalServerErrorResponse()
+    @ApiNotFoundResponse()
+    @ApiForbiddenResponse()
+    @ApiOkResponse()
     @RolesDecorator(AccessLevel.MODERATOR)
     @UseGuards(AuthGuard, RolesGuard)
     @Post('unban/:id')
-    @HttpCode(HttpStatus.OK)
-    unbanUser(@Param('id', ParseIntPipe) id: number) {
-        this.banService.unbanUser(id);
+    async unbanUser(@Param('id', ParseIntPipe) id: number): Promise<void> {
+        await this.banService.unbanUser(id);
     }
 }

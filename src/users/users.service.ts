@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User, UserCreationArggs } from './models/users.model';
 import { Post } from 'src/posts/models/posts.model';
@@ -39,6 +39,10 @@ export class UsersService {
     }
 
     async createUser(createUserDto: CreateUserDto) {
+        const existedUser: User = await this.findUserByEmail(createUserDto.email);
+
+        if (existedUser) throw new ConflictException(`The email ${existedUser.email} has already been registered`)
+
         const saltRounds: number = Number(process.env.SALT_ROUNDS);
         const hash: string = await bcrypt.hash(createUserDto.password, saltRounds);
 

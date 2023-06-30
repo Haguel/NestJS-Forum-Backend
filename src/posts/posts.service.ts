@@ -17,7 +17,7 @@ export class PostsService {
         private usersService: UsersService
     ) { }
 
-    async createPost(userId: number, createPostDto: CreatePostDto) {
+    async createPost(userId: number, createPostDto: CreatePostDto): Promise<Post> {
         const user: User = await this.usersService.getUser(userId);
         const post: Post = await this.postsRepository.create(
             { ...createPostDto, userId },
@@ -29,7 +29,7 @@ export class PostsService {
         return post;
     }
 
-    async getPost(id: number) {
+    async getPost(id: number): Promise<Post> {
         const post: Post = await this.postsRepository.findOne({
             where: { id },
             include: [Complaint, User, Like],
@@ -40,7 +40,7 @@ export class PostsService {
         return post;
     }
 
-    async getAllPosts() {
+    async getAllPosts(): Promise<Post[]> {
         const posts: Post[] = await this.postsRepository.findAll();
 
         if (!posts.length) throw new NotFoundException("There are no posts");
@@ -48,7 +48,7 @@ export class PostsService {
         return posts;
     }
 
-    async editPost(userId: number, postId: number, editPostDto: EditPostDto) {
+    async editPost(userId: number, postId: number, editPostDto: EditPostDto): Promise<Post> {
         await this.getPost(postId);
 
         const [, [updatedPost]] = await this.postsRepository.update(
@@ -65,7 +65,7 @@ export class PostsService {
         return updatedPost;
     }
 
-    async removePost(userId: number, postId: number) {
+    async removePost(userId: number, postId: number): Promise<void> {
         const post: Post = await this.getPost(postId);
 
         if (post.userId === userId) {
@@ -78,7 +78,7 @@ export class PostsService {
         }
     }
 
-    async handleLike(postId: number, userId: number) {
+    async handleLike(postId: number, userId: number): Promise<number> {
         const user: User = await this.usersService.getUser(userId);
         const post: Post = await this.getPost(postId);
 

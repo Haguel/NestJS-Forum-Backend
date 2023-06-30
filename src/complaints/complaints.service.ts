@@ -12,7 +12,7 @@ export class ComplaintsService {
         private postsService: PostsService
     ) { }
 
-    async createComplaint(createComplaintDto: CreateComplaintDto) {
+    async createComplaint(createComplaintDto: CreateComplaintDto): Promise<Complaint> {
         const post: Post = await this.postsService.getPost(createComplaintDto.postId);
 
         const complaint: Complaint = await this.complaintRepository.create(createComplaintDto);
@@ -22,7 +22,7 @@ export class ComplaintsService {
         return complaint;
     }
 
-    async getComplaint(id: number) {
+    async getComplaint(id: number): Promise<Complaint> {
         const complaint: Complaint = await this.complaintRepository.findByPk(id);
 
         if (!complaint) throw new NotFoundException(`There is no complaint with id ${id}`);
@@ -30,7 +30,7 @@ export class ComplaintsService {
         return complaint;
     }
 
-    async getAllComplaints() {
+    async getAllComplaints(): Promise<Complaint[]> {
         const complaints: Complaint[] = await this.complaintRepository.findAll();
 
         if (!complaints.length) throw new NotFoundException("There are no complaints");
@@ -38,13 +38,13 @@ export class ComplaintsService {
         return complaints;
     }
 
-    async removeComplaint(id: number) {
+    async removeComplaint(id: number): Promise<void> {
         const complaint: Complaint = await this.getComplaint(id);
 
         await this.removeComplaintWithModel(complaint);
     }
 
-    async removeComplaintWithModel(complaint: Complaint) {
+    async removeComplaintWithModel(complaint: Complaint): Promise<void> {
         await this.complaintRepository.destroy({ where: { id: complaint.id } });
     }
 }

@@ -14,7 +14,7 @@ export class ComplaintMuteService {
         private postsService: PostsService,
     ) { }
 
-    async mute(complaintMuteDto: ComplaintMuteDto) {
+    async mute(complaintMuteDto: ComplaintMuteDto): Promise<void> {
         const complaint: Complaint = await this.complaintsService.getComplaint(complaintMuteDto.complaintId);
 
         if (!complaint) throw new NotFoundException(`Complaint with id ${complaintMuteDto.complaintId} doesn't exist`);

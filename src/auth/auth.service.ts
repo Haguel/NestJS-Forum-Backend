@@ -19,7 +19,7 @@ export class AuthService {
         private readonly jwtService: JwtService,
     ) { }
 
-    async login(loginUserDto: LoginUserDto) {
+    async login(loginUserDto: LoginUserDto): Promise<string> {
 
         const user: User = await this.usersService.findUserByEmail(loginUserDto.email);
 
@@ -33,7 +33,7 @@ export class AuthService {
         return token;
     }
 
-    async register(registerUserDto: RegisterUserDto) {
+    async register(registerUserDto: RegisterUserDto): Promise<string> {
         const role: Role = await this.rolesService.getRole(AccessLevel[1]);
 
         const createUserDto: CreateUserDto = {
