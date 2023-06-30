@@ -21,11 +21,11 @@ Here is my NestJS pet project. It provides a platform for users to make/edit/rem
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/nestjs-forum.git
+   git clone https://github.com/TsugaruBurst/NestJS-Forum-Backend.git
 
 2. Install dependencies
    ```bash
-    cd nestjs-forum-backend
+    cd NestJS-Forum-Backend
     npm install
 
 3. Setup test.env file
