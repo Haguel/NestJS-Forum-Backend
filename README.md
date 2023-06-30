@@ -8,7 +8,7 @@ Here is my NestJS pet project. It provides a platform for users to make/edit/rem
 
 ## Features
 - User authentication and authorization
-- Create, read, update, and delete posts
+- Create, read, update, and remove posts
 - Create, read, remove complaints
 - Liking system for posts
 - User roles and permissions
@@ -51,5 +51,5 @@ Here is my NestJS pet project. It provides a platform for users to make/edit/rem
 - ![class-transformer](https://img.shields.io/badge/class--transformer-yellow?style=flat) ![class-validator](https://img.shields.io/badge/class--validator-brightgreen?style=flat) for data validations
 - ![pg](https://img.shields.io/badge/pg-lightblue?style=flat) ![pg-hstore](https://img.shields.io/badge/pg--hstore-blueviolet?style=flat) drivers for PostgreSQL
 - ![nestjs/swagger](https://img.shields.io/badge/nestjs%2Fswagger-red?style=flat) for api documentation
-- ![nestjs/sequelize](https://img.shields.io/badge/nestjs%2Fsequelize-blue?style=flat) ![sequelize](https://img.shields.io/badge/sequelize-blue?style=flat) ![sequelize-typescript](https://img.shields.io/badge/sequelize--typescript-blueviolet?style=flat) ![@types/sequelize](https://img.shields.io/badge/%40types%2Fsequelize-lightblue?style=flat) for sequelize&sequelize-typescript
+- ![nestjs/sequelize](https://img.shields.io/badge/nestjs%2Fsequelize-blue?style=flat) ![sequelize](https://img.shields.io/badge/sequelize-blue?style=flat) ![sequelize-typescript](https://img.shields.io/badge/sequelize--typescript-blueviolet?style=flat) ![@types/sequelize](https://img.shields.io/badge/%40types%2Fsequelize-lightblue?style=flat) for sequelize and sequelize-typescript
 
