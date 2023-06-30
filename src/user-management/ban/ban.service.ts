@@ -9,7 +9,7 @@ import convertStringToDate from 'src/common/convertStringToDate';
 export class BanService {
     constructor(private usersService: UsersService) { }
 
-    private async banWithModel(user: User, reason: string, banExpiredAt?: Date) {
+    private async banWithModel(user: User, reason: string, banExpiredAt?: Date): Promise<void> {
         user.isBanned = true;
         user.banReason = reason;
         user.banExpiredAt = banExpiredAt;
@@ -17,14 +17,14 @@ export class BanService {
         await user.save();
     }
 
-    async ban(banDto: BanDto) {
+    async ban(banDto: BanDto): Promise<void> {
         const user: User = await this.usersService.getUser(banDto.userId);
         const banExpiredAt: Date | null = convertStringToDate(banDto.banExpiredAt);
 
         this.banWithModel(user, banDto.banReason, banExpiredAt);
     }
 
-    async unbanUser(id: number) {
+    async unbanUser(id: number): Promise<void> {
         const user: User = await this.usersService.getUser(id);
 
         user.isBanned = false;

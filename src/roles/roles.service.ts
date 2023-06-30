@@ -13,7 +13,7 @@ export class RolesService {
         private usersService: UsersService
     ) { }
 
-    async getRole(roleTitle: string) {
+    async getRole(roleTitle: string): Promise<Role> {
         const role: Role = await this.rolesRepository.findOne({
             where: { title: roleTitle }
         })
@@ -23,7 +23,7 @@ export class RolesService {
         return role;
     }
 
-    async setRole(userId: number, setRoleDto: SetRoleDto) {
+    async setRole(userId: number, setRoleDto: SetRoleDto): Promise<void> {
         const user: User = await this.usersService.getUser(userId);
         const role: Role = await this.getRole(setRoleDto.roleTitle);
 

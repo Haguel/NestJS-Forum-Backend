@@ -8,7 +8,7 @@ import convertStringToDate from 'src/common/convertStringToDate';
 export class MuteService {
     constructor(private usersService: UsersService) { }
 
-    private async muteWithModel(user: User, reason: string, muteExpiredAt?: Date) {
+    private async muteWithModel(user: User, reason: string, muteExpiredAt?: Date): Promise<void> {
         user.isMuted = true;
         user.muteReason = reason;
         user.muteExpiredAt = muteExpiredAt;
@@ -16,14 +16,14 @@ export class MuteService {
         await user.save();
     }
 
-    async mute(muteDto: MuteDto) {
+    async mute(muteDto: MuteDto): Promise<void> {
         const user: User = await this.usersService.getUser(muteDto.userId);
         let muteExpiredAt: Date | null = convertStringToDate(muteDto.muteExpiredAt);
 
         this.muteWithModel(user, muteDto.muteReason, muteExpiredAt);
     }
 
-    async unmute(id: number) {
+    async unmute(id: number): Promise<void> {
         const user: User = await this.usersService.getUser(id);
 
         user.isMuted = false;

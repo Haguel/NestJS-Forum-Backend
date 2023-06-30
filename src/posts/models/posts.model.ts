@@ -3,8 +3,9 @@ import { BelongsTo, Column, ForeignKey, HasMany, Model, Table } from "sequelize-
 import { Complaint } from "../../complaints/models/complaints.model";
 import { User } from "src/users/models/users.model";
 import { Like } from "./likes.model";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
-interface PostCreationArggs {
+class PostCreationArggs {
     userId: number;
     title: string;
     description: string;
@@ -12,18 +13,40 @@ interface PostCreationArggs {
 
 @Table({ tableName: 'posts' })
 export class Post extends Model<Post, PostCreationArggs> {
+    @ApiPropertyOptional({
+        type: Number,
+        nullable: false,
+        example: 1,
+        description: "Unique id"
+    })
     @Column({ type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, unique: true })
     id: number;
 
+    @ApiProperty({
+        type: String,
+        nullable: false,
+        example: "I like shaurma too",
+    })
     @Column({ type: DataTypes.STRING, allowNull: false })
     title: string;
 
-    @Column({ type: DataTypes.STRING })
+
+    @ApiProperty({
+        type: String,
+        nullable: false,
+        example: "Btw I really like shaurma. The origin of shaurma is somewhere in Arabia but it's very popular here, in Ukraine!",
+    })
+    @Column({ type: DataTypes.STRING, allowNull: false })
     description: string;
 
     @HasMany(() => Like)
     likes: Like[];
 
+    @ApiProperty({
+        type: Number,
+        nullable: false,
+        example: 1,
+    })
     @ForeignKey(() => User)
     @Column({ allowNull: false })
     userId: number;
@@ -31,6 +54,7 @@ export class Post extends Model<Post, PostCreationArggs> {
     @BelongsTo(() => User)
     user: User;
 
+    @ApiPropertyOptional({ type: Complaint, isArray: true })
     @HasMany(() => Complaint)
     complaints: Complaint[];
 }
