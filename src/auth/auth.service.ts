@@ -23,6 +23,8 @@ export class AuthService {
 
         const user: User = await this.usersService.findUserByEmail(loginUserDto.email);
 
+        if (!user) throw new ForbiddenException("Wrong email or password");
+
         const isPasswordMatch: boolean = await bcrypt.compare(loginUserDto.password, user.passwordHash);
 
         if (!isPasswordMatch) throw new ForbiddenException("Wrong email or password");
