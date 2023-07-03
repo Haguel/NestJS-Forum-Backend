@@ -39,17 +39,21 @@ Here is my NestJS pet project. It provides a platform for users to make/edit/rem
     SALT_ROUNDS=6
     JWT_SECRET=secret
 
-4. Start the development server
+4. Start the test server
    ```bash
-   npm run start:dev
+   npm run start:test
+
+5. Run prepared seeder in order to get needed data to test (it creates needed roles and an admin)
+   ```bash
+   npm run db:seed:test
 
 ## Libraries I used
-- ![nestjs/config](https://img.shields.io/badge/nestjs%2Fconfig-yellowgreen?style=flat) for env.
-- ![cross-env](https://img.shields.io/badge/cross--env-brightgreen?style=flat) for starting with different env files in different modes
-- ![nestjs/jwt](https://img.shields.io/badge/nestjs%2Fjwt-red?style=flat) for jwt
-- ![bcrypt](https://img.shields.io/badge/bcrypt-orange?style=flat) for crypting passwords
-- ![class-transformer](https://img.shields.io/badge/class--transformer-yellow?style=flat) ![class-validator](https://img.shields.io/badge/class--validator-brightgreen?style=flat) for data validations
-- ![pg](https://img.shields.io/badge/pg-lightblue?style=flat) ![pg-hstore](https://img.shields.io/badge/pg--hstore-blueviolet?style=flat) drivers for PostgreSQL
-- ![nestjs/swagger](https://img.shields.io/badge/nestjs%2Fswagger-red?style=flat) for api documentation
-- ![nestjs/sequelize](https://img.shields.io/badge/nestjs%2Fsequelize-blue?style=flat) ![sequelize](https://img.shields.io/badge/sequelize-blue?style=flat) ![sequelize-typescript](https://img.shields.io/badge/sequelize--typescript-blueviolet?style=flat) ![@types/sequelize](https://img.shields.io/badge/%40types%2Fsequelize-lightblue?style=flat) for sequelize and sequelize-typescript
+- ![nestjs-config](https://img.shields.io/badge/%40nestjs%2Fconfig-configuration-%23E0234E) ![dotenv](https://img.shields.io/badge/dotenv-configuration-%23E0234E) ![cross-env](https://img.shields.io/badge/cross--env-environment-%23E0234E)
+- ![nestjs-jwt](https://img.shields.io/badge/%40nestjs%2Fjwt-authentication-%236DB33F)
+- ![bcrypt](https://img.shields.io/badge/bcrypt-hashing-%2346BC99)
+- ![class-transformer](https://img.shields.io/badge/class--transformer-data--transformator-%239E7EFC) ![class-validator](https://img.shields.io/badge/class--validator-data--validation-%239E7EFC)
+- ![pg](https://img.shields.io/badge/pg-database--driver-%23047AED) ![pg-hstore](https://img.shields.io/badge/pg--hstore-database--driver-%23047AED)
+- ![nestjs-swagger](https://img.shields.io/badge/%40nestjs%2Fswagger-api--documentation-%23F8941D)
+- ![nestjs-sequelize](https://img.shields.io/badge/%40nestjs%2Fsequelize-database--orm-%237991A8) ![sequelize](https://img.shields.io/badge/sequelize-database--orm-%237991A8) ![sequelize-typescript](https://img.shields.io/badge/sequelize--typescript-database--orm-%237991A8) ![types-sequelize](https://img.shields.io/badge/%40types%2Fsequelize-database--orm--types-%237991A8)
+- ![sequelize-cli](https://img.shields.io/badge/%40sequelize%2Fcli-db--cli-%CC397BFF)
 
