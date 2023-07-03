@@ -4,7 +4,6 @@ import { Role } from './models/roles.model';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/models/users.model';
 import { SetRoleDto } from './dto/set-role.dto';
-import { AccessLevel } from './common/role.common';
 
 @Injectable()
 export class RolesService {
@@ -29,14 +28,5 @@ export class RolesService {
 
         user.role = role;
         await user.save();
-    }
-
-    // Use this request when you firstly start the app, it will init all the needed roles
-    // There is no need to use it after
-    // OR you can add roles by own in database
-    async initRoles() {
-        await this.rolesRepository.create({ accessLevel: AccessLevel["USER"], title: AccessLevel[1] })
-        await this.rolesRepository.create({ accessLevel: AccessLevel["MODERATOR"], title: AccessLevel[2] })
-        await this.rolesRepository.create({ accessLevel: AccessLevel["ADMIN"], title: AccessLevel[3] })
     }
 }

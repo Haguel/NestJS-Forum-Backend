@@ -25,12 +25,4 @@ export class AuthController {
     async register(@Body() registerUserDto: RegisterUserDto): Promise<string> {
         return await this.authService.register(registerUserDto);
     }
-
-    // Use this request when you firstly start the app, it will init the first admin
-    // There is no need to use it after
-    // OR you can add admin by own in database
-    @Post('init')
-    initAdmin() {
-        return this.authService.initAdmin()
-    }
 }

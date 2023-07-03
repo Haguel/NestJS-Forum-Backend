@@ -51,27 +51,4 @@ export class AuthService {
 
         return token;
     }
-
-    // Use this request when you firstly start the app, it will init the first admin
-    // There is no need to use it after
-    // OR you can add admin by own in database
-    async initAdmin() {
-        const role: Role = await this.rolesService.getRole(AccessLevel[3]);
-
-        const createUserDto: CreateUserDto = {
-            email: "admin@gmail.com",
-            username: "admin",
-            password: "admin123!",
-            role,
-            roleId: role.id
-        };
-
-        const user: User = await this.usersService.createUser(createUserDto);
-
-        const jwtPayload: JwtPayload = convertUserToJwtPayload(user);
-        const token: string = this.jwtService.sign(jwtPayload);
-
-        return token;
-    }
-
 }
