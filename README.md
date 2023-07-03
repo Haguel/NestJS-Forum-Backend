@@ -46,6 +46,7 @@ Here is my NestJS pet project. It provides a platform for users to make/edit/rem
 5. Run prepared seeder in order to get needed data to test (it creates needed roles and an admin)
    ```bash
    npm run db:seed:test
+> **Attention:** Do not run seeder before the first initializtion of the app. Run the server first in order to init all the needed tables in the database
 
 ## Libraries I used
 - ![nestjs-config](https://img.shields.io/badge/%40nestjs%2Fconfig-configuration-%23E0234E) ![dotenv](https://img.shields.io/badge/dotenv-configuration-%23E0234E) ![cross-env](https://img.shields.io/badge/cross--env-environment-%23E0234E)
